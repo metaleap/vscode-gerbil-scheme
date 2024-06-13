@@ -1,0 +1,122 @@
+{
+  "name": "vscode-gerbil-scheme",
+  "displayName": "Gerbil Scheme",
+  "description": "A LISP for the 21st Century",
+  "version": "0.0.1",
+  "engines": {
+    "vscode": "^1.89.1"
+  },
+  "publisher": "mighty-gerbils",
+  "categories": [
+    "Programming Languages", "Language Packs", "Languages", "Linters"
+  ],
+  "keywords": [
+    "Gerbil",
+    "Gambit",
+    "Scheme",
+    "Language",
+    "Lisp",
+    "REPL",
+    "multi-root ready"
+  ],
+  "markdown": "github",
+  "capabilities": {
+    "virtualWorkspaces": {
+      "supported": false, "description": "TODO"
+    },
+    "untrustedWorkspaces": {
+      "supported": false, "description": "TODO"
+    }
+  },
+  "bugs": {
+    "url": "https://github.com/mighty-gerbils/vscode-gerbil-scheme/issues"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/mighty-gerbils/vscode-gerbil-scheme.git"
+  },
+  "homepage": "https://cons.io",
+  "pricing": "Free",
+
+  "activationEvents": [
+    "onLanguage:scheme",
+    "workspaceContains:**/*.ss",
+    "workspaceContains:**/*.sps",
+    "workspaceContains:**/*.scm",
+    "workspaceContains:**/*.sch",
+    "workspaceContains:**/*.sls"
+  ],
+  "main": "./out/extension.js",
+  "contributes": {
+    "languages": [
+      {
+        "id": "gerbil",
+        "aliases": [
+          "Gerbil",
+          "Gerbil Scheme",
+          "Scheme",
+          "scheme"
+        ],
+        "extensions": [
+          ".ss",
+          ".sps",
+          ".scm",
+          ".sch",
+          ".sls"
+        ],
+        "configuration": "./syntaxes/language-configuration.json"
+      }
+    ],
+    "grammars": [
+      {
+        "language": "gerbil",
+        "scopeName": "source.scheme",
+        "path": "./syntaxes/scheme.tmGrammar.json",
+        "embeddedLanguages": {
+          "meta.embedded.block.scheme": "gerbil"
+        }
+      },
+      {
+        "scopeName": "source.markdown.codeblock.scheme",
+        "path": "./syntaxes/scheme.markdown.tmGrammar.json",
+        "injectTo": [
+          "text.html.markdown"
+        ]
+      }
+    ],
+    "configurationDefaults": {
+      "[gerbil]": {
+        "editor.insertSpaces": true,
+        "editor.tabSize": 2,
+        "editor.indentSize": 2,
+        "editor.wordSeparators": "`()[];'\","
+      }
+    },
+    "commands": [
+      {
+        "command": "vscode-gerbil-scheme.helloWorld",
+        "title": "Hello World"
+      }
+    ]
+  },
+
+  "scripts": {
+    "vscode:prepublish": "npm run compile",
+    "compile": "tsc -p ./",
+    "watch": "tsc -watch -p ./",
+    "pretest": "npm run compile && npm run lint",
+    "lint": "eslint src --ext ts",
+    "test": "vscode-test"
+  },
+  "devDependencies": {
+    "@types/vscode": "^1.89.1",
+    "@types/mocha": "^10.0.6",
+    "@types/node": "18.x",
+    "@typescript-eslint/eslint-plugin": "^7.11.0",
+    "@typescript-eslint/parser": "^7.11.0",
+    "eslint": "^8.57.0",
+    "typescript": "^5.4.5",
+    "@vscode/test-cli": "^0.0.9",
+    "@vscode/test-electron": "^2.4.0"
+  }
+}
