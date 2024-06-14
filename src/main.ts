@@ -1,19 +1,15 @@
-import * as vsc from 'vscode';
-
+import * as vsc from 'vscode'
 import * as lsp from './lsp'
 
 
-let lsp_client: lsp.Client;
+let lsp_client: lsp.Client | null = null
 
 
 export function activate(ctx: vsc.ExtensionContext) {
 	lsp_client = lsp.init(ctx)
 
-	ctx.subscriptions.push(...[
-		lsp_client,
-		// other, future disposables go here...
-	])
-
+	if (lsp_client)
+		ctx.subscriptions.push(lsp_client)
 }
 
 export function deactivate() {

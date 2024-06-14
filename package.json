@@ -83,6 +83,17 @@
         ]
       }
     ],
+    "configuration": [
+      {
+        "title": "Gerbil Scheme",
+        "properties": {
+          "gerbil.lsp.disabled": { "type": "boolean", "default": false, "description":
+            "Requires extension restart. If `true`, disables most extension functionality, other than basic language grammar (syntax highlighting, brackets auto-closing etc)." },
+          "gerbil.lsp.cmd": { "type": "array", "default": [ "gxlsp" ], "description":
+            "Requires extension restart. Command name and args of the Gerbil language server to run." }
+        }
+      }
+    ],
     "configurationDefaults": {
       "[gerbil]": {
         "editor.insertSpaces": true,
