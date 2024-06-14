@@ -18,8 +18,7 @@ export function init(ctx: vsc.ExtensionContext): (lsp.LanguageClient | null) {
         {
             transport: lsp.TransportKind.stdio,
             command: cmd_name_and_args[0],
-            args: cmd_name_and_args.slice(1),
-            options: {},
+            args: cmd_name_and_args.slice(1)
         } as lsp.ServerOptions,
 
         {
