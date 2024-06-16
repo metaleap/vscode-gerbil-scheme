@@ -8,7 +8,7 @@ export type Client = lsp.LanguageClient
 
 export function init(ctx: vsc.ExtensionContext): (lsp.LanguageClient | null) {
     const cfg = vsc.workspace.getConfiguration()
-    const cmd_name_and_args = cfg.get<string[]>("gerbil.lsp.cmd")
+    const cmd_name_and_args = cfg.get<string[]>("gerbil.lsp.cmd", ["gxlsp"])
     if (cfg.get<boolean>("gerbil.lsp.disabled", false) || (!cmd_name_and_args) || (!cmd_name_and_args.length))
         return null
 
