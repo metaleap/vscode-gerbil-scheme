@@ -101,7 +101,18 @@
         "editor.indentSize": 2,
         "editor.wordSeparators": "`()[];'\","
       }
-    }
+    },
+    "notebooks": [
+      {
+        "type": "gerbil-repl",
+        "displayName": "Gerbil REPL",
+        "selector": [
+          {
+            "filenamePattern": "*.gxrepl"
+          }
+        ]
+      }
+    ]
   },
 
   "scripts": {
