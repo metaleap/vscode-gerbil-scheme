@@ -34,9 +34,6 @@ export class Kernel {
                 ]))
                 exec.end(true, Date.now())
             }
-        vsc.languages.getLanguages().then(langs =>
-            vsc.window.showInformationMessage("" + langs.includes("gerbil"))
-        )
         notebook.save()
     }
 }
