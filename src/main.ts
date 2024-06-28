@@ -27,6 +27,11 @@ export function activate(ctx: vsc.ExtensionContext) {
 	statusBarItemBuildOnSave.text = "$(coffee)"
 	statusBarItemBuildOnSave.tooltip = "Gerbil build-on-save running..."
 	regDisp(vsc.workspace.onDidSaveTextDocument(tryBuildOnSave))
+
+	// set up Eval code actions
+	vsc.languages.registerCodeActionsProvider({ scheme: 'file', language: 'gerbil' }, {
+		provideCodeActions: codeActions,
+	})
 }
 
 export function deactivate() {
@@ -34,6 +39,16 @@ export function deactivate() {
 		return lspClient.stop()
 
 	return (void 0)
+}
+
+
+function codeActions(it: vsc.TextDocument, range: vsc.Range, _ctx: vsc.CodeActionContext, _: vsc.CancellationToken): vsc.Command[] {
+	if (range.isEmpty)
+		return []
+	return [
+		{ command: "gerbil-cmd-eval-quick", title: "Quick-Eval", arguments: [it, range] },
+		{ command: "gerbil-cmd-eval-repl", title: "Eval in REPL...", arguments: [it, range] },
+	]
 }
 
 
@@ -55,9 +70,8 @@ function tryBuildOnSave(justSaved: vsc.TextDocument) {
 	statusBarItemBuildOnSave.show()
 	setTimeout(() => { // needed for the status-item to actually show, annoyingly
 		try {
-			const buf = node_exec.execFileSync("gerbil", ["build"], { cwd: dir_path, })
+			node_exec.execFileSync("gerbil", ["build"], { cwd: dir_path, })
 		} catch (err) {
-			vsc.window.showErrorMessage("Build-on-Save failed: " + err)
 			const term = vsc.window.createTerminal({ cwd: dir_path, name: "gerbil build" })
 			regDisp(term)
 			term.show(true)

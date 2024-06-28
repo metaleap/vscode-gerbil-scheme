@@ -28,6 +28,11 @@ export function init(ctx: vsc.ExtensionContext): (lsp.LanguageClient | null) {
         } as lsp.LanguageClientOptions
 
     )
+    client.onDidChangeState((evt) => {
+        if (evt.newState == lsp.State.Running)
+            client.sendRequest("workspace/executeCommand",
+                { command: "announce-gerbil-vscode-ext", arguments: [] } as lsp.ExecuteCommandParams)
+    })
     client.start()
     return client
 }
