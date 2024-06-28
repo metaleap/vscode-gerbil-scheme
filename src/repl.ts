@@ -8,7 +8,7 @@ import * as vsc from 'vscode'
 
 export class Kernel {
     private readonly self: vsc.NotebookController
-    private exec_order = 0
+    private execOrder = 0
 
     constructor() {
         this.self = vsc.notebooks.createNotebookController("nbctl-gerbil-repl", "gerbil-repl", "Gerbil REPL")
@@ -25,7 +25,7 @@ export class Kernel {
         for (const cell of cells)
             if (cell.kind === vsc.NotebookCellKind.Code) {
                 const exec = this.self.createNotebookCellExecution(cell)
-                exec.executionOrder = ++this.exec_order
+                exec.executionOrder = ++this.execOrder
                 exec.start(Date.now())
                 const src = cell.document.getText().trim()
                 // TODO: actual REPL / eval call here
@@ -43,22 +43,22 @@ export class Kernel {
 
 interface NotebookCell {
     source: string
-    cell_type: vsc.NotebookCellKind
+    cellType: vsc.NotebookCellKind
 }
 
 export class NotebookSerializer implements vsc.NotebookSerializer {
     async serializeNotebook(data: vsc.NotebookData, _: vsc.CancellationToken): Promise<Uint8Array> {
         const cells: NotebookCell[] = []
         for (const cell of data.cells)
-            cells.push({ source: cell.value, cell_type: cell.kind })
+            cells.push({ source: cell.value, cellType: cell.kind })
         return new TextEncoder().encode(JSON.stringify(cells))
     }
 
     async deserializeNotebook(content: Uint8Array, _: vsc.CancellationToken): Promise<vsc.NotebookData> {
         const cells = (<NotebookCell[]>JSON.parse(new TextDecoder().decode(content)))
         return new vsc.NotebookData(cells.map(item =>
-            new vsc.NotebookCellData(item.cell_type, item.source,
-                ((item.cell_type === vsc.NotebookCellKind.Code) ? 'gerbil' : 'markdown'))
+            new vsc.NotebookCellData(item.cellType, item.source,
+                ((item.cellType === vsc.NotebookCellKind.Code) ? 'gerbil' : 'markdown'))
         ))
     }
 }

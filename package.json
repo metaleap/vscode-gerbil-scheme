@@ -90,7 +90,9 @@
           "gerbil.lsp.disabled": { "type": "boolean", "default": false, "description":
             "Requires extension restart. If `true`, disables most extension functionality, other than basic language grammar (syntax highlighting, brackets auto-closing etc)." },
           "gerbil.lsp.cmd": { "type": "array", "default": [ "gxlsp" ], "description":
-            "Requires extension restart. Command name and args of the Gerbil language server to run." }
+            "Requires extension restart. Command name and args of the Gerbil language server to run." },
+          "gerbil.buildOnSave": { "type": "boolean", "default": false, "description":
+            "Whether to `gerbil build` whenever saving any `.ss` files." }
         }
       }
     ],
