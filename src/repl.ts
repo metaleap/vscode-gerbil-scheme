@@ -11,9 +11,9 @@ export class Kernel {
     private execOrder = 0
 
     constructor() {
-        this.self = vsc.notebooks.createNotebookController("nbctl-gerbil-repl", "gerbil-repl", "Gerbil REPL")
+        this.self = vsc.notebooks.createNotebookController('nbctl-gerbil-repl', 'gerbil-repl', "Gerbil REPL")
         this.self.supportsExecutionOrder = true
-        this.self.supportedLanguages = ["gerbil"]
+        this.self.supportedLanguages = ['gerbil']
         this.self.executeHandler = this.exec.bind(this)
     }
 
@@ -30,7 +30,7 @@ export class Kernel {
                 const src = cell.document.getText().trim()
                 // TODO: actual REPL / eval call here
                 exec.replaceOutput(new vsc.NotebookCellOutput([
-                    vsc.NotebookCellOutputItem.text(src, "text/x-clojure")
+                    vsc.NotebookCellOutputItem.text(src, 'text/x-clojure') // 'text/x-gerbil' sadly don't work in current vsc 1.90.2
                 ]))
                 exec.end(true, Date.now())
             }
@@ -42,23 +42,25 @@ export class Kernel {
 // unwanted ephemeral stuff (recent outputs and execution stats), plus we want to cleanly ctor it on load
 
 interface NotebookCell {
-    source: string
-    cellType: vsc.NotebookCellKind
+    value: string
+    kind: vsc.NotebookCellKind
 }
 
 export class NotebookSerializer implements vsc.NotebookSerializer {
     async serializeNotebook(data: vsc.NotebookData, _: vsc.CancellationToken): Promise<Uint8Array> {
         const cells: NotebookCell[] = []
         for (const cell of data.cells)
-            cells.push({ source: cell.value, cellType: cell.kind })
+            cells.push({ value: cell.value, kind: cell.kind })
+        console.log(cells)
+        console.log(new TextEncoder().encode(JSON.stringify(cells)))
         return new TextEncoder().encode(JSON.stringify(cells))
     }
 
     async deserializeNotebook(content: Uint8Array, _: vsc.CancellationToken): Promise<vsc.NotebookData> {
         const cells = (<NotebookCell[]>JSON.parse(new TextDecoder().decode(content)))
         return new vsc.NotebookData(cells.map(item =>
-            new vsc.NotebookCellData(item.cellType, item.source,
-                ((item.cellType === vsc.NotebookCellKind.Code) ? 'gerbil' : 'markdown'))
+            new vsc.NotebookCellData(item.kind, item.value,
+                ((item.kind === vsc.NotebookCellKind.Code) ? 'gerbil' : 'markdown'))
         ))
     }
 }

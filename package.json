@@ -116,8 +116,8 @@
       }
     ],
     "commands": [
-      { "command": "gerbil.cmd.eval.quick", "title": "gerbil.cmd.eval.quick" },
-      { "command": "gerbil.cmd.eval.repl", "title": "gerbil.cmd.eval.repl" }
+      { "command": "gerbil.cmd.eval.quick", "title": "Gerbil: Quick-Eval" },
+      { "command": "gerbil.cmd.eval.repl", "title": "Gerbil: new REPL from expression..." }
     ]
   },
 
