@@ -3,7 +3,7 @@ import * as lsp from 'vscode-languageclient/node'
 
 
 export type Client = lsp.LanguageClient
-
+export type ExecuteCommandParams = lsp.ExecuteCommandParams
 
 
 export function init(ctx: vsc.ExtensionContext): (lsp.LanguageClient | null) {

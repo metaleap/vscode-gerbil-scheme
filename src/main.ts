@@ -29,9 +29,13 @@ export function activate(ctx: vsc.ExtensionContext) {
 	regDisp(vsc.workspace.onDidSaveTextDocument(tryBuildOnSave))
 
 	// set up Eval code actions
-	vsc.languages.registerCodeActionsProvider({ scheme: 'file', language: 'gerbil' }, {
-		provideCodeActions: codeActions,
-	})
+	if (lspClient) {
+		regDisp(vsc.commands.registerCommand("gerbil.cmd.eval.quick", cmdEvalQuick))
+		regDisp(vsc.commands.registerCommand("gerbil.cmd.eval.repl", cmdEvalRepl))
+		vsc.languages.registerCodeActionsProvider({ scheme: 'file', language: 'gerbil' }, {
+			provideCodeActions: codeActions,
+		})
+	}
 }
 
 export function deactivate() {
@@ -46,9 +50,25 @@ function codeActions(it: vsc.TextDocument, range: vsc.Range, _ctx: vsc.CodeActio
 	if (range.isEmpty)
 		return []
 	return [
-		{ command: "gerbil-cmd-eval-quick", title: "Quick-Eval", arguments: [it, range] },
-		{ command: "gerbil-cmd-eval-repl", title: "Eval in REPL...", arguments: [it, range] },
+		{ command: "gerbil.cmd.eval.quick", title: "Quick-Eval", arguments: [it.fileName, range] },
+		{ command: "gerbil.cmd.eval.repl", title: "Eval in REPL...", arguments: [it.fileName, range] },
 	]
+}
+
+
+function cmdEvalQuick(...args: any[]) {
+	lspClient!.sendRequest("workspace/executeCommand",
+		{ command: "eval-in-file", arguments: args } as lsp.ExecuteCommandParams)
+		.then(
+			(result) =>
+				vsc.window.showInformationMessage("" + result),
+			vsc.window.showErrorMessage,
+		)
+		.catch(vsc.window.showErrorMessage)
+}
+
+
+function cmdEvalRepl(...args: any[]) {
 }
 
 
