@@ -8,24 +8,25 @@ import * as node_exec from 'child_process'
 
 let lspClient: lsp.Client | null = null
 let statusBarItemBuildOnSave: vsc.StatusBarItem
-
+let regDisp: (...items: { dispose(): any }[]) => number
 
 export function activate(ctx: vsc.ExtensionContext) {
 	// register "repl", aka vscode custom notebook type
-	ctx.subscriptions.push(vsc.workspace.registerNotebookSerializer("gerbil-repl", new repl.NotebookSerializer()))
-	ctx.subscriptions.push(new repl.Kernel())
+	regDisp = ctx.subscriptions.push.bind(ctx.subscriptions)
+	regDisp(vsc.workspace.registerNotebookSerializer("gerbil-repl", new repl.NotebookSerializer()))
+	regDisp(new repl.Kernel())
 
 	// bring up LSP client unless disabled in user config
 	lspClient = lsp.init(ctx)
 	if (lspClient)
-		ctx.subscriptions.push(lspClient)
+		regDisp(lspClient)
 
 	// set up build-on-save
-	ctx.subscriptions.push(vsc.workspace.onDidSaveTextDocument(tryBuildOnSave))
-	ctx.subscriptions.push(statusBarItemBuildOnSave =
+	regDisp(statusBarItemBuildOnSave =
 		vsc.window.createStatusBarItem("gerbil-build-on-save", vsc.StatusBarAlignment.Left))
 	statusBarItemBuildOnSave.text = "$(coffee)"
 	statusBarItemBuildOnSave.tooltip = "Gerbil build-on-save running..."
+	regDisp(vsc.workspace.onDidSaveTextDocument(tryBuildOnSave))
 }
 
 export function deactivate() {
@@ -57,6 +58,10 @@ function tryBuildOnSave(justSaved: vsc.TextDocument) {
 			const buf = node_exec.execFileSync("gerbil", ["build"], { cwd: dir_path, })
 		} catch (err) {
 			vsc.window.showErrorMessage("Build-on-Save failed: " + err)
+			const term = vsc.window.createTerminal({ cwd: dir_path, name: "gerbil build" })
+			regDisp(term)
+			term.show(true)
+			term.sendText("gerbil build", true)
 		} finally {
 			statusBarItemBuildOnSave.hide()
 		}
