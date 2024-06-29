@@ -30,7 +30,7 @@ export class Kernel {
                 const src = cell.document.getText().trim()
                 // TODO: actual REPL / eval call here
                 exec.replaceOutput(new vsc.NotebookCellOutput([
-                    vsc.NotebookCellOutputItem.text(src, 'text/x-clojure') // 'text/x-gerbil' sadly don't work in current vsc 1.90.2
+                    vsc.NotebookCellOutputItem.text(src, 'text/x-clojure') // 'text/x-gerbil' sadly won't work in current vsc 1.90.2
                 ]))
                 exec.end(true, Date.now())
             }
@@ -51,8 +51,6 @@ export class NotebookSerializer implements vsc.NotebookSerializer {
         const cells: NotebookCell[] = []
         for (const cell of data.cells)
             cells.push({ value: cell.value, kind: cell.kind })
-        console.log(cells)
-        console.log(new TextEncoder().encode(JSON.stringify(cells)))
         return new TextEncoder().encode(JSON.stringify(cells))
     }
 
