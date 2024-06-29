@@ -48,6 +48,23 @@
                     ]
                 },
                 {
+                    "name": "meta.list.brace.scheme",
+                    "begin": "\\{(?!\\s*library\\s+)",
+                    "beginCaptures": {
+                        "0": { "name": "meta.brace.curly.start.scheme" }
+                    },
+                    "end": "\\}",
+                    "endCaptures": {
+                        "0": { "name": "meta.brace.curly.end.scheme" }
+                    },
+                    "patterns": [
+                        { "include": "$self" },
+                        { "include": "#library_definition" },
+                        { "include": "#library_module_related" },
+                        { "include": "#function" }
+                    ]
+                },
+                {
                     "name": "meta.list.bracket.scheme",
                     "begin": "\\[(?!\\s*library\\s+)",
                     "beginCaptures": {
