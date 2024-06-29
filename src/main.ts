@@ -125,7 +125,7 @@ async function cmdReplFromExpr(...args: any[]) {
 }
 
 
-function tryBuildOnSave(justSaved: vsc.TextDocument) {
+async function tryBuildOnSave(justSaved: vsc.TextDocument) {
 	const cfg = vsc.workspace.getConfiguration()
 	const build_on_save = cfg.get<boolean>('gerbil.buildOnSave', false)
 	if (!build_on_save)
@@ -140,6 +140,7 @@ function tryBuildOnSave(justSaved: vsc.TextDocument) {
 	if (!node_fs.existsSync(pkg_file_path))
 		return
 
+	console.log(new Date() + "\tbuild-on-save...")
 	statusBarItemBuildOnSave.show()
 	setTimeout(() => { // needed for the status-item to actually show, annoyingly
 		try {
@@ -152,5 +153,5 @@ function tryBuildOnSave(justSaved: vsc.TextDocument) {
 		} finally {
 			statusBarItemBuildOnSave.hide()
 		}
-	}, 1)
+	}, 321) // timeout of well over 100ms needed, or all this would delay (by the whole build duration!) LSP didChangeWatchedFiles notification. but with proper timeout, the latter "gets through in time". nodeJS event-loop subtleties...
 }
