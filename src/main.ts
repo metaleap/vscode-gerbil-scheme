@@ -12,15 +12,16 @@ let regDisp: (...items: { dispose(): any }[]) => number
 let lastEvalExpr: string = ""
 
 export function activate(ctx: vsc.ExtensionContext) {
-	// register "repl", aka vscode custom notebook type
 	regDisp = ctx.subscriptions.push.bind(ctx.subscriptions)
-	regDisp(vsc.workspace.registerNotebookSerializer('gerbil-repl', new repl.NotebookSerializer()))
-	regDisp(new repl.Kernel())
 
 	// bring up LSP client unless disabled in user config
 	lspClient = lsp.init(ctx)
 	if (lspClient)
 		regDisp(lspClient)
+
+	// register "repl", aka vscode custom notebook type
+	regDisp(new repl.Kernel())
+	regDisp(vsc.workspace.registerNotebookSerializer('gerbil-repl', new repl.NotebookSerializer()))
 
 	// set up build-on-save
 	regDisp(statusBarItemBuildOnSave =
