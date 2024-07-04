@@ -100,8 +100,7 @@
       "[gerbil]": {
         "editor.insertSpaces": true,
         "editor.tabSize": 2,
-        "editor.indentSize": 2,
-        "editor.wordSeparators": "`()[];'\","
+        "editor.indentSize": 2
       }
     },
     "notebooks": [
