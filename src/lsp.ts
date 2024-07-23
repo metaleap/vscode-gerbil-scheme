@@ -22,7 +22,7 @@ export function init(ctx: vsc.ExtensionContext): (lsp.LanguageClient | null) {
         } as lsp.ServerOptions,
 
         {
-            documentSelector: [{ language: 'gerbil', scheme: 'file' }],
+            documentSelector: [{ language: 'gerbil', scheme: 'file' }, { language: 'gerbil', scheme: 'vscode-notebook-cell' }],
             revealOutputChannelOn: lsp.RevealOutputChannelOn.Error,
             synchronize: { fileEvents: vsc.workspace.createFileSystemWatcher('**/*.ss') },
         } as lsp.LanguageClientOptions

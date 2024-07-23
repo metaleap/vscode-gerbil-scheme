@@ -30,7 +30,7 @@ export class Kernel {
                 const src = cell.document.getText().trim()
                 // TODO: actual REPL / eval call here
                 exec.replaceOutput(new vsc.NotebookCellOutput([
-                    vsc.NotebookCellOutputItem.text(src, 'text/x-clojure') // 'text/x-gerbil' sadly won't work in current vsc 1.90.2
+                    vsc.NotebookCellOutputItem.text(src, 'text/x-clojure') // 'text/x-gerbil' sadly won't work github.com/microsoft/vscode-discussions/discussions/1251
                 ]))
                 exec.end(true, Date.now())
             }
